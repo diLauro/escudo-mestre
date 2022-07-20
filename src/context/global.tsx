@@ -1,22 +1,21 @@
 import { createContext } from "react";
 
-
 type UserType = {
-    id: string | number,
-    name: string
-}
+  id: string | number;
+  name: string;
+};
 
 type InitialStateType = {
-    user: UserType | undefined;
-}
+  user: UserType | undefined;
+};
 
-const initiaState: InitialStateType = {
-    user: undefined
-}
+export const initiaState: InitialStateType = {
+  user: undefined,
+};
 
-const ctxGlogal = createContext<InitialStateType>(initiaState);
+export const CtxGlogal = createContext<InitialStateType>(initiaState);
 
-const loginReducer = (state: any, action: any) => {
+export const loginReducer = (state: any, action: any) => {
   switch (action.type) {
     case "LOGIN":
       return {
