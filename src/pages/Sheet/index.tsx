@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   FormControlLabel,
   Grid,
   Stack,
@@ -11,10 +12,51 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { get, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Atributes } from "../../components/Attributes";
+import constants from "../../data/constants.json";
+import { attributesSchema } from "../../validation/attributesValidation";
+import { useCallback, useState } from "react";
 
 export const Sheet = () => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("md"));
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(attributesSchema),
+    mode: "onBlur",
+  });
+
+  const [total, setTotal] = useState<number[]>([0, 0]);
+
+  const submit = (dataForm: any) => {
+    // console.log(dataForm);
+    // console.log(getValues()['DEX'].value);
+    totalAttributes();
+  };
+
+  const totalAttributes = useCallback(() => {
+    let totalValue = 0;
+    let totalMod = 0;
+    constants.forEach((item) => {
+      totalValue += getValues()[item.abbreviation].value
+        ? Number.parseInt(getValues()[item.abbreviation].value)
+        : 0;
+      totalMod += getValues()[item.abbreviation].mod
+        ? Number.parseInt(getValues()[item.abbreviation].mod)
+        : 0;
+    });
+    console.log(getValues());
+    setTotal([totalValue, totalMod]);
+  }, []);
 
   return (
     <Container
@@ -26,7 +68,7 @@ export const Sheet = () => {
         Ficha
       </Typography>
 
-      <Grid container spacing={2} mt={1} justifyContent="center">
+      <Grid container spacing={2} mt={1} justifyContent="center" p={2}>
         <Grid item xs={12}>
           <FormControlLabel
             control={<Switch name="editCharacter" />}
@@ -34,389 +76,85 @@ export const Sheet = () => {
           />
         </Grid>
 
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5" fontWeight="bold">
-                Atributos
-              </Typography>
+        <form onSubmit={handleSubmit(submit)}>
+          <Grid item xs={12} md={7} mt={2}>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={12} md={6}>
+                <Typography variant="h5" fontWeight="bold">
+                  Atributos
+                </Typography>
+              </Grid>
+              {!matches && <Grid item xs={3} />}
+              <Grid item xs={3} md={2} textAlign="center">
+                Valor
+              </Grid>
+              <Grid item xs={3} md={2} textAlign="center">
+                Mod
+              </Grid>
+              <Grid item xs={3} md={2} textAlign="center">
+                %
+              </Grid>
             </Grid>
-            {!matches && (<Grid item xs={3}/>)}
-            <Grid item xs={3} md={2} textAlign="center">
-              Valor
-            </Grid>
-            <Grid item xs={3} md={2} textAlign="center">
-              Mod
-            </Grid>
-            <Grid item xs={3} md={2} textAlign="center">
-              %
+            <Divider sx={{ marginY: 2 }} />
+          </Grid>
+
+          <Grid item xs={12} md={7}>
+            <Grid container spacing={1}>
+              {constants.map(({ label, abbreviation }) => (
+                <Atributes
+                  label={label}
+                  abbreviation={abbreviation}
+                  register={register}
+                  errors={errors}
+                  setValue={setValue}
+                  totalAttributes={totalAttributes}
+                  key={abbreviation}
+                />
+              ))}
+
+              <Grid container spacing={1} alignItems="center">
+                <Grid item xs={12} md={6}></Grid>
+                {!matches && <Grid item xs={3} />}
+                <Grid item xs={3} md={2} textAlign="center">
+                  {total[0]}
+                </Grid>
+                <Grid item xs={3} md={2} textAlign="center">
+                  {total[1]}
+                </Grid>
+                <Grid item xs={3} md={2} textAlign="center"></Grid>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Stack
+                  spacing={2}
+                  justifyContent="end"
+                  flexDirection="row"
+                  flexWrap="nowrap"
+                >
+                  <Box>
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      size="large"
+                      sx={{ marginX: 1 }}
+                    >
+                      Voltar
+                    </Button>
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="large"
+                      sx={{ marginX: 1 }}
+                    >
+                      Salvar
+                    </Button>
+                  </Box>
+                </Stack>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={3} md={6}>
-              <Typography>
-                {matches ? (
-                  <>
-                    <Typography component="span" fontWeight="bold">
-                      Constituição
-                    </Typography>
-                    (CON)
-                  </>
-                ) : (
-                  <>CON</>
-                )}
-              </Typography>
-            </Grid>
-            <Grid item xs={3} md={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={3} md={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={3} md={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Força
-                </Typography>{" "}
-                (FR)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Destreza
-                </Typography>{" "}
-                (DEX)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Agilidade
-                </Typography>{" "}
-                (AGI)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Inteligência
-                </Typography>{" "}
-                (INT)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Força de Vontade
-                </Typography>{" "}
-                (WILL)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Percepção
-                </Typography>{" "}
-                (PER)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              <Typography>
-                <Typography component="span" fontWeight="bold">
-                  Carisma
-                </Typography>{" "}
-                (CAR)
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <TextField
-                variant="outlined"
-                size="small"
-                fullWidth
-                InputProps={{
-                  readOnly: true,
-                }}
-                sx={{ input: { textAlign: "center" } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12} md={7}>
-          <Grid container spacing={1} alignItems="center">
-            <Grid item xs={6}>
-              Total
-            </Grid>
-            <Grid item xs={2} textAlign="center">
-              101
-            </Grid>
-            <Grid item xs={2} textAlign="center">
-              0
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Stack
-            spacing={2}
-            justifyContent="end"
-            flexDirection="row"
-            flexWrap="nowrap"
-          >
-            <Box>
-              <Button
-                color="secondary"
-                variant="outlined"
-                size="large"
-                sx={{ marginX: 1 }}
-              >
-                Voltar
-              </Button>
-
-              <Button variant="contained" size="large" sx={{ marginX: 1 }}>
-                Salvar
-              </Button>
-            </Box>
-          </Stack>
-        </Grid>
+        </form>
       </Grid>
     </Container>
   );

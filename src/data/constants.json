@@ -1,0 +1,34 @@
+[
+  {
+    "label": "Constituição",
+    "abbreviation": "CON"
+  },
+  {
+    "label": "Força",
+    "abbreviation": "FR"
+  },
+  {
+    "label": "Agilidade",
+    "abbreviation": "AGI"
+  },
+  {
+    "label": "Destreza",
+    "abbreviation": "DEX"
+  },
+  {
+    "label": "Inteligencia",
+    "abbreviation": "INT"
+  },
+  {
+    "label": "Força de Vontade",
+    "abbreviation": "WILL"
+  },
+  {
+    "label": "Carisma",
+    "abbreviation": "CAR"
+  },
+  {
+    "label": "Percepção",
+    "abbreviation": "PER"
+  }
+]

@@ -9,13 +9,10 @@ type Props = {
 export default function Template({ children }: Props) {
   const ctxLogin = useContext(CtxGlogal);
 
-  console.log(ctxLogin);
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {ctxLogin.user && <NavBar />}
       <Paper sx={{ borderRadius: 0, flexGrow: 1 }}>{children}</Paper>
-
-      
     </Box>
   );
 }
