@@ -2,7 +2,7 @@
   "name": "rpg",
   "private": true,
   "version": "0.0.0",
-  "homepage": "escudo-mestre/",
+  "homepage": "https://dilauro.github.io/escudo-mestre/",
   "type": "module",
   "scripts": {
     "dev": "vite",
