@@ -1,4 +1,6 @@
 import { createContext } from "react";
+import { FirebaseApp, initializeApp } from "firebase/app";
+import { IData } from "../App";
 
 type UserType = {
   id: string | number;
@@ -6,14 +8,13 @@ type UserType = {
 };
 
 type InitialStateType = {
-  user: UserType | undefined;
+  data: IData;
+  setData: React.Dispatch<React.SetStateAction<IData>>;
 };
 
-export const initiaState: InitialStateType = {
-  user: undefined,
-};
-
-export const CtxGlogal = createContext<InitialStateType>(initiaState);
+export const CtxGlogal = createContext<InitialStateType>(
+  {} as InitialStateType
+);
 
 export const loginReducer = (state: any, action: any) => {
   switch (action.type) {

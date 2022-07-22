@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   DeepRequired,
   FieldErrorsImpl,
@@ -23,7 +23,7 @@ type Props = {
   totalAttributes: () => void;
 };
 
-export const Atributes = ({
+const Atributes = ({
   label,
   abbreviation,
   register,
@@ -116,3 +116,5 @@ export const Atributes = ({
     </>
   );
 };
+
+export default Atributes;

@@ -1,23 +1,26 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
   Container,
   Divider,
   FormControlLabel,
   Grid,
   Stack,
   Switch,
-  TextField,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { get, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Atributes } from "../../components/Attributes";
+import { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import Atributes from "../../components/Attributes";
 import constants from "../../data/constants.json";
 import { attributesSchema } from "../../validation/attributesValidation";
-import { useCallback, useState } from "react";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 export const Sheet = () => {
   const theme = useTheme();
@@ -32,7 +35,7 @@ export const Sheet = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(attributesSchema),
-    mode: "onBlur",
+    mode: "all",
   });
 
   const [total, setTotal] = useState<number[]>([0, 0]);
@@ -54,7 +57,6 @@ export const Sheet = () => {
         ? Number.parseInt(getValues()[item.abbreviation].mod)
         : 0;
     });
-    console.log(getValues());
     setTotal([totalValue, totalMod]);
   }, []);
 
@@ -63,6 +65,7 @@ export const Sheet = () => {
       sx={{
         minHeight: "100vh",
       }}
+      maxWidth="xl"
     >
       <Typography component="h1" variant="h4" pt={3}>
         Ficha
@@ -76,8 +79,8 @@ export const Sheet = () => {
           />
         </Grid>
 
-        <form onSubmit={handleSubmit(submit)}>
-          <Grid item xs={12} md={7} mt={2}>
+        <Grid item xs={12} md={7} mt={2}>
+          <form onSubmit={handleSubmit(submit)}>
             <Grid container spacing={1} alignItems="center">
               <Grid item xs={12} md={6}>
                 <Typography variant="h5" fontWeight="bold">
@@ -96,9 +99,7 @@ export const Sheet = () => {
               </Grid>
             </Grid>
             <Divider sx={{ marginY: 2 }} />
-          </Grid>
 
-          <Grid item xs={12} md={7}>
             <Grid container spacing={1}>
               {constants.map(({ label, abbreviation }) => (
                 <Atributes
@@ -153,8 +154,295 @@ export const Sheet = () => {
                 </Stack>
               </Grid>
             </Grid>
+          </form>
+        </Grid>
+
+        <Grid item xs={12} md={5}>
+          <Grid item xs={12} mt={2}>
+            <Typography variant="h5" fontWeight="bold">
+              Indicadores
+            </Typography>
+
+            <Divider sx={{ marginY: 2 }} />
+
+            <Grid container spacing={3}>
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.secondary.main}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h4"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        <br />( 21 )
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.secondary.main}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h3"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        {" "}
+                        / 21
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.secondary.main}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h3"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        {" "}
+                        / 21
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.text.secondary}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h3"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        {" "}
+                        / 21
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.secondary.main}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h3"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        {" "}
+                        / 21
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <Card
+                  sx={{
+                    boxShadow: `0 0 5px ${theme.palette.secondary.main}`,
+                  }}
+                >
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" textAlign="center">
+                      20
+                      <Typography
+                        gutterBottom
+                        component="span"
+                        variant="h3"
+                        textAlign="center"
+                        color="GrayText"
+                      >
+                        {" "}
+                        / 21
+                      </Typography>
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      textAlign="center"
+                      color={theme.palette.secondary.dark}
+                    >
+                      Pontos de Vida
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Button size="small">
+                      <FaMinus />
+                    </Button>
+                    <Button size="small">
+                      <FaPlus />
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            </Grid>
           </Grid>
-        </form>
+        </Grid>
+
+        <Grid item xs={12} md={7}>
+          <Grid item xs={12} mt={2}>
+            <Typography variant="h5" fontWeight="bold">
+              Aprimoramentos
+            </Typography>
+
+            <Divider sx={{ marginY: 2 }} />
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} md={5}>
+          <Grid item xs={12} mt={2}>
+            <Typography variant="h5" fontWeight="bold">
+              Perícias de Combate
+            </Typography>
+
+            <Divider sx={{ marginY: 2 }} />
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} md={12}>
+          <Grid item xs={12} mt={2}>
+            <Typography variant="h5" fontWeight="bold">
+              Perícias
+            </Typography>
+
+            <Divider sx={{ marginY: 2 }} />
+          </Grid>
+        </Grid>
       </Grid>
     </Container>
   );
