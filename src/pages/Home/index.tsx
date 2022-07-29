@@ -1,48 +1,123 @@
-import { Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
-import { onValue, ref, set } from "firebase/database";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { uid } from "uid";
-
 import { CtxGlogal } from "../../context/global";
+import { useQueryDocs } from "../../hook/useQueryDocks";
+import { FirstAccess } from "../FirstAccess";
+import { Player } from "../Login";
 
 export const Home = () => {
   const { data, setData } = useContext(CtxGlogal);
   const auth = getAuth();
   const navigate = useNavigate();
 
+  const key: string = `${localStorage.getItem("key")}`;
+
+  const { data: dataPlayer, setSend } = useQueryDocs<Player>({
+    db: data.db,
+    table: "players",
+    field: "idUser",
+    value: key.replaceAll('"', "")!,
+    // value: "603SSD8pfjvMdNCcGXhGbFCwelCE5K2",
+    send: true,
+  });
+
+  console.log(dataPlayer)
+
+  // useEffect(() => {
+  //   const getExpertise = async () => {
+  //     const dataUsers = await getDocs(usersRef);
+  //     console.log("aa", dataUsers.query.firestore);
+  //     console.log(
+  //       dataUsers.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+  //     );
+  //   };
+
+  //   getExpertise();
+  // }, []);
+
+  // const collectionRef = collection(data.db, "sheets");
+  // useEffect(() => {
+  //   const getExpertise = async () => {
+  //     const dataExpertise = await getDocs(collectionRef);
+  //     console.log(
+  //       dataExpertise.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+  //     );
+  //   };
+
+  //   getExpertise();
+  // }, []);
+
+  // useEffect(() => {
+
+  //   const createDocs = async () => {
+  //     const expertise = await addDoc(collectionRef,
+  //       {
+  //         sheets: [
+  //           {
+  //             nivel: 1,
+  //             atributes: [
+  //               {
+  //                 dex: 10,
+  //                 agi: 10,
+  //                 con: 10,
+  //                 fr: 10,
+  //                 int: 10,
+  //                 will: 10,
+  //                 per: 10,
+  //                 car: 10,
+  //               },
+  //             ],
+  //           }
+  //         ]
+  //       }
+
+  //     );
+  //     // console.log(expertise);
+  //   };
+
+  //   createDocs()
+  // }, []);
+
+  // useEffect(() => {
+
+  //   const table = "hanson"
+
+  //   const createSetDocs = async () => {
+  //     const newDocs = doc(data.db, table, "aaa");
+  //     await  setDoc(newDocs, {nome: "teste"})
+  //   };
+
+  //   const deleteExpertise = async (id: string) => {
+  //     const expertiseDelete = doc(data.db, table, "aaa");
+  //     await deleteDoc(expertiseDelete);
+  //   };
+
+  //   createSetDocs()
+  //   deleteExpertise()
+  // }, []);
+
+  // useEffect(() => {
+  //   const deleteExpertise = async (id: string) => {
+  //     const expertiseDelete = doc(data.db, "expertise", id);
+  //     await deleteDoc(expertiseDelete);
+  //   };
+  //   // deleteExpertise("p9ZO4FLdxwQt5vhwQIs3")
+  // }, []);
+
+  // useEffect(() => {
+  //   const updateExpertise = async (id: string) => {
+  //     const expertiseUpdate = doc(data.db, "expertise", id);
+  //     const newFields = { expertise: "Treinamento de Animais" };
+  //     await updateDoc(expertiseUpdate, newFields);
+  //   };
+  //   // updateExpertise("biW0XM5BuqXBG815x3xy")
+  // }, []);
+
   const logout = async () => {
     await signOut(auth);
     navigate("/login");
-  };
-
-  const [todo, setTodo] = useState<string>();
-  const [todos, setTodos] = useState<any[]>([]);
-
-  // read
-  useEffect(() => {
-    const temp: any[] = [];
-    onValue(ref(data.db), (snapshot) => {
-      const dataDb: any = snapshot.val();
-      if (dataDb !== null) {
-        Object.values(dataDb).map((todoDb: any) => {
-          temp.push(todoDb);
-        });
-      }
-    });
-    setTodos(temp);
-  }, []);
-
-  // write
-  const writeToDatabase = () => {
-    const uuid = uid();
-    set(ref(data.db, `${uuid}`), {
-      uuid,
-      todo,
-    });
-
-    setTodo("");
   };
 
   return (
@@ -55,43 +130,9 @@ export const Home = () => {
         flexDirection: "column",
       }}
     >
-      <Grid container>
-        <TextField
-          name="groupExpertise"
-          value={todo ? todo : ""}
-          onChange={(e) => {
-            setTodo(e.target.value);
-          }}
-        />
-        <Button onClick={writeToDatabase}>Submit</Button>
-      </Grid>
-
-      <Grid container>
-        {todos?.map((item) => (
-          <Grid item xs={12} key={item?.uuid}>
-            <Typography>{item?.todo}</Typography>
-            <Button>update</Button>
-            <Button>delete</Button>
-          </Grid>
-        ))}
-      </Grid>
-
       <Grid container justifyContent="center" spacing={3}>
         <Grid item xs={7} textAlign="center">
-          Escudo Mestre
-        </Grid>
-
-        <Grid item xs={7}>
-          <Button
-            variant="contained"
-            size="large"
-            fullWidth
-            onClick={() => {
-              logout();
-            }}
-          >
-            Sign out of Escudo Mestre
-          </Button>
+          {dataPlayer?.status && <FirstAccess />}
         </Grid>
       </Grid>
     </Container>

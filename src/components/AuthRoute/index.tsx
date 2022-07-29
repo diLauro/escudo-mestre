@@ -19,7 +19,6 @@ export const AuthRoute = ({ children }: Props) => {
     if (user) {
       setLoading(false);
     } else {
-      console.log("unauthorized");
       navigate("/login");
     }
   });

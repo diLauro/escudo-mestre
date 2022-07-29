@@ -17,6 +17,7 @@ export default function Router() {
         }
       />
       <Route path="login" element={<Login />} />
+      <Route path="login/:key" element={<Login />} />
       <Route
         path="character"
         element={

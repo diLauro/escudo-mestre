@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@mui/material";
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { Database, getDatabase } from "firebase/database";
+import { Firestore, getFirestore } from "firebase/firestore";
 import { useState } from "react";
 import { config } from "./config/config";
 import { CtxGlogal } from "./context/global";
@@ -9,11 +9,17 @@ import Template from "./template";
 import { theme } from "./theme";
 
 const app = initializeApp(config.firebaseConfig);
-const db = getDatabase(app);
-
+const db = getFirestore(app);
 export interface IData {
   app: FirebaseApp;
-  db: Database;
+  db: Firestore;
+  user?: {
+    id: string;
+  };
+  player?: {
+    name: string;
+    status: string;
+  };
 }
 
 export default function App() {

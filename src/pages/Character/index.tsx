@@ -9,9 +9,40 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useContext, useEffect } from "react";
+import { CtxGlogal } from "../../context/global";
+import { useCreateDocs } from "../../hook/useCreateDocs";
 
 export const Character = () => {
-  return (
+  const { data, setData } = useContext(CtxGlogal);
+
+  const { docCreator, setDocCreator, infoCreator, isLoading, setSendCreator } =
+    useCreateDocs(data.db, "characters");
+
+  const submit = () => {
+
+    setDocCreator({
+      player: localStorage.getItem("key"),
+      basicInfo: {
+        nome: "Finch",
+        altura: 1.78,
+        peso: 90,
+        descricao: "teste descrição",
+        sexo: "Masculino",
+        dataNascimento: "10/07/1955",
+        idadeReal: 40,
+        idadeAparente: 35,
+        profissao: "Advogado",
+        localNascimento: "new york",
+        religiao: "nenhuma",
+        backgound: "teste",
+      },
+    });
+    setSendCreator(true);
+  };
+
+
+  return !isLoading ? (
     <Container
       sx={{
         minHeight: "100vh",
@@ -125,17 +156,24 @@ export const Character = () => {
             flexWrap="nowrap"
           >
             <Box>
-              <Button color="secondary" variant="outlined" size="large" sx={{marginX: 1}}>
-                Voltar
-              </Button>
 
-              <Button variant="contained" size="large" sx={{marginX: 1}}>
-                Salvar
+
+              <Button
+                variant="contained"
+                size="large"
+                sx={{ marginX: 1 }}
+                onClick={() => {
+                  submit();
+                }}
+              >
+                Continuar
               </Button>
             </Box>
           </Stack>
         </Grid>
       </Grid>
     </Container>
+  ) : (
+    <>h1</>
   );
 };
